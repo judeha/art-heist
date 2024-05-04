@@ -1,0 +1,25 @@
+# heist = heist_features
+# slot  = slot_features + qualifications + job_satisfaction
+# thief = schedule_size + qualifications + job_satisfaction
+
+schedule_size: 100
+heist_features:
+  - 'start'             # start time: int
+  - 'end'               # end time  : int
+  - 'n_slots'           # n_slots left: int
+  - 'n_slots_required'  # n_slots left that are required: int
+slot_features:
+  - 'required'          # is this slot required: 0/1
+qualifications:
+  - 'Safe cracking'
+  - 'Getaway driving'
+  - 'Masterminding'
+  - 'Burglary'
+  - 'Smooth Operator'
+  - 'Hacking'
+  - 'Token woman'
+job_satisfaction:
+  - 'Risk'
+  - 'Payoff'
+  - 'Complexity'
+  - 'Travel'
