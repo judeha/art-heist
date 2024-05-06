@@ -8,3 +8,4 @@ torch==2.2.2
 torch_geometric==2.5.2
 networkx
 mypy
+pyyaml
