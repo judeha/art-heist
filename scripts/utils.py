@@ -1,5 +1,6 @@
 #%%
 
+import torch
 import numpy as np
 import pandas as pd
 from typing import Any, List, Tuple, Dict, Set, Union, Optional, Callable
@@ -193,19 +194,16 @@ def generate_thief_data(schedule_size: int,
     return np.concatenate([schedule, quals, sat])
 # %%
 def conflict_schedule(schedule: Any,
-                      interval: Tuple) -> bool:
+                      s: int,
+                      e: int) -> bool:
     
     """ Checks if interval conflicts with schedule """
-    s,e = interval
     # True if conflict
     return schedule[s:e].sum() > 0
 
-def conflict_interval(interval1: Tuple,
-                      interval2: Tuple) -> bool:
+def conflict_interval(s1, e1, s2, e2) -> bool:
     
     """ Checks if intervals conflict """
-    s1,e1 = interval1
-    s2,e2 = interval2
     no_conflict = (s1 < s2 and e1 < s2) or (s2 < s1 and e2 < s1)
     # True if conflict
     return not no_conflict
@@ -216,3 +214,8 @@ def is_unqualified(thief_quals: Any,
     # True if unqualified
     return (thief_quals < slot_quals).any()
 # %%
+def remove_edges(edge_index: torch.tensor, remove_idx: Any) -> Any:
+    """ Given edge_index tensor, array of idx in ascending order to remove -> return new view of edge_index """
+    keep_idx = np.arange(edge_index.shape[1])
+    keep_idx = np.delete(keep_idx, remove_idx)
+    return edge_index[:,keep_idx]
