@@ -1,0 +1,10 @@
+schedule_size: 100
+heist_dur_max: 5
+n_slots_max: 8
+n_slots_min: 2
+n_heists_max: 5
+n_heists_min: 0
+qual_max: 3
+qual_min: 0
+sat_min: 0
+sat_max: 3
