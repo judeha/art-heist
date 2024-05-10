@@ -2,10 +2,6 @@ import pandas as pd
 import numpy as np
 import yaml
 import time
-<<<<<<< HEAD
-import matplotlib.pyplot as plt
-=======
->>>>>>> dev/agent
 from functools import partial
 from typing import Any, Set, Tuple, List, Dict, Union, Optional
 import gc
@@ -14,14 +10,6 @@ gc.enable()
 import torch
 from torch_geometric.data import HeteroData
 import torch_geometric.transforms as T
-<<<<<<< HEAD
-from torch_geometric import EdgeIndex
-from torch_geometric.typing import OptPairTensor
-
-%load_ext autoreload
-%autoreload 1
-=======
->>>>>>> dev/agent
 
 import sys
 sys.path.append('../scripts')
@@ -40,21 +28,14 @@ with open(config_params_PATH, 'r') as f:
     config_params = yaml.load(f, Loader=yaml.SafeLoader)
 
 class CustomEnvironment():
-<<<<<<< HEAD
-    def __init__(self, config=config_problemdef):
-=======
     def __init__(self, config=config_problemdef, max_timesteps=30):
->>>>>>> dev/agent
         # Define immutable parameters: node sizes
         self.schedule_size = config['schedule_size']
         self.qual_size = len(config['qualifications'])
         self.sat_size = len(config['job_satisfaction'])
-<<<<<<< HEAD
-=======
         self.thief_size = self.schedule_size + self.qual_size + self.sat_size
         self.slot_size = 1 + self.qual_size + self.sat_size
         self.heist_size = len(config['heist_features'])
->>>>>>> dev/agent
 
         # Hard code features to idx mappings
         self.featidx_h_start = 0
@@ -68,29 +49,6 @@ class CustomEnvironment():
         self.featidx_s_qual = (1, self.qual_size+1)
         self.featidx_s_sat = (self.qual_size+1, self.slot_size)
             
-<<<<<<< HEAD
-    def set_params(self, config=config_params):
-        # Define mutable parameters for data generation
-        heist_dur_max = config['heist_dur_max']
-        n_slots_max = config['n_slots_max']
-        n_slots_min = config['n_slots_min']
-        n_heists_max = config['n_heists_max']
-        n_heists_min = config['n_heists_min']
-        qual_max = config['qual_max']
-        qual_min = config['qual_min']
-        sat_max = config['sat_max']
-        sat_min = config['sat_min']
-
-        # Set partial functions using problem definition sizes
-        self.generate_heist_data = partial(generate_heist_data, self.schedule_size, heist_dur_max, n_slots_max, n_slots_min)
-        self.generate_thief_data = partial(generate_thief_data, self.schedule_size, n_heists_max, n_heists_min, qual_max, qual_min, self.qual_size, sat_max, sat_min, self.sat_size)
-        self.generate_slot_data = partial(generate_slot_data, qual_max, qual_min, self.qual_size, self.sat_size)
-
-    def reset(self):
-        n_thieves = 30
-        n_heists = 50
-
-=======
         self.max_timesteps = max_timesteps
     def set_params(self, config=config_params): # TODO: make implicit
         # Define mutable parameters for data generation
@@ -110,7 +68,6 @@ class CustomEnvironment():
     def generate_slot_data (self, required): return partial(generate_slot_data, self.qual_max, self.qual_min, self.qual_size, self.sat_size)(required)
 
     def reset(self, n_thieves=30, n_heists=50):
->>>>>>> dev/agent
         self.init_indices()
         self.init_dictionaries()
         self.heist_df = self.gen_n_heists(n_heists) # will update index_d_heist1, index_d_heist2 in place
@@ -118,19 +75,6 @@ class CustomEnvironment():
         self.thief_df = self.gen_n_thieves(n_thieves) # will update index_a_thief, index_a_slot, slot2thief in place
 
         self.data = self.reset_data()
-<<<<<<< HEAD
-        self.reward = None
-        self.termination = False
-        self.timestep = 0
-
-    def step(self, edge_idx): # NOTE: editing self.data inplace except for self.index_b_thief, self.index_b_slot, self.thiefslot2idx
-        
-        self.reward = 0
-        self.timestep += 1
-
-        # Check for termination
-        if not self.thiefslot2idx or self.timestep > 999:
-=======
         self.reward = 0
         self.termination = False
         self.timestep = 0
@@ -144,7 +88,6 @@ class CustomEnvironment():
         # Check for termination
         if not self.thiefslot2idx or self.timestep > self.max_timesteps:
             print('terminated')
->>>>>>> dev/agent
             self.termination = True
 
             # Penalize unsatisfied thieves
@@ -204,11 +147,7 @@ class CustomEnvironment():
             self.data['heist'].x[heist][self.featidx_h_n_slots_req] -= 1
 
         # print(len(self.thiefslot2idx), self.data['thief','possible','slot'].edge_index.shape)
-<<<<<<< HEAD
-        return self.data, self.reward, self.termination, self.timestep
-=======
         return self.data, self.reward.item(), self.termination, self.timestep
->>>>>>> dev/agent
 
     def init_indices(self):
         self.index_a_thief, self.index_a_slot = [], []      # NOTE: DISREGARD AFTER INIT
